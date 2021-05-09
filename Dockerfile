@@ -9,7 +9,7 @@ RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-
 
 WORKDIR /app
 
-COPY ./pyproject.toml ./poetry.lock* /app
+COPY ./pyproject.toml ./poetry.lock* /app/
 COPY . /app
 
 RUN poetry install --no-root --no-dev
