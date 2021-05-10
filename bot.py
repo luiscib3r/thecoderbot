@@ -3,6 +3,7 @@ from telegram.ext import Updater
 
 from app.commands.start import start_command
 from app.commands.code import code_command
+from app.commands.message import message_handler
 
 if __name__ == "__main__":
     updater = Updater(BOT_TOKEN, use_context=True)
@@ -11,6 +12,7 @@ if __name__ == "__main__":
 
     dp.add_handler(start_command)
     dp.add_handler(code_command)
+    dp.add_handler(message_handler)
 
     if ENVIRONMENT == "dev":
         updater.start_polling()
