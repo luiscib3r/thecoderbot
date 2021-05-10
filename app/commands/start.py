@@ -5,7 +5,8 @@ from app.models import TelegramUser
 from app.crud.telegram_user import crud_create_telegram_user
 
 start_message = '''
-Hola soy TheCoder Bot
+Hola soy TheCoderBot.
+Usa el comando /code para enviarme tu código y te responderé con una imagen de tu código resaltado.
 '''
 
 
