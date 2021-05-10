@@ -4,6 +4,9 @@ import requests
 from config import CARBON_API
 from telegram import ChatAction, Update, Chat
 from telegram.ext import CallbackContext, CommandHandler, ConversationHandler, Filters, MessageHandler
+from app.models.telegram_code import TelegramCode
+from app.crud.telegram_code import crud_create_telegram_code
+import base64
 
 CODE_INPUT = 0
 
@@ -27,6 +30,19 @@ def code_input_text(update: Update, context: CallbackContext):
         filename = save_file(response.content)
 
         send_file(filename, update.message.chat)
+
+        code = TelegramCode(
+            id=update.message.message_id,
+            text=update.message.text,
+            chat_id=update.message.chat.id,
+            from_id=update.message.from_user.id,
+            date=update.message.date.strftime("%Y-%m-%d %H:%M:%S"),
+            image=base64.b64encode(open(filename, "rb").read())
+        )
+
+        crud_create_telegram_code(code)
+
+        os.unlink(filename)
     else:
         update.message.reply_text(
             "Ocurrión un error al generar la imagen para el código")
@@ -48,8 +64,6 @@ def send_file(filename: str, chat: Chat):
     chat.send_photo(
         photo=open(filename, 'rb')
     )
-
-    os.unlink(filename)
 
 
 code_command = ConversationHandler(
