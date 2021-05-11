@@ -20,6 +20,8 @@ def code_handler(update: Update, context: CallbackContext):
 
 
 def code_input_text(update: Update, context: CallbackContext):
+    update.message.chat.send_action(action=ChatAction.TYPING, timeout=None)
+
     code = text = update.message.text
 
     api_url = f"{CARBON_API}/"
@@ -29,7 +31,8 @@ def code_input_text(update: Update, context: CallbackContext):
     if (response.status_code == 200):
         filename = save_file(response.content)
 
-        context.bot.deleteMessage(update.message.chat_id, update.message.message_id)
+        context.bot.deleteMessage(
+            update.message.chat_id, update.message.message_id)
 
         send_file(filename, update.message.chat)
 
