@@ -29,6 +29,8 @@ def code_input_text(update: Update, context: CallbackContext):
     if (response.status_code == 200):
         filename = save_file(response.content)
 
+        context.bot.deleteMessage(update.message.chat_id, update.message.message_id)
+
         send_file(filename, update.message.chat)
 
         code = TelegramCode(
