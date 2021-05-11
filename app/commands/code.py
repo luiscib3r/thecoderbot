@@ -2,7 +2,7 @@ import os
 import uuid
 import requests
 from config import CARBON_API
-from telegram import ChatAction, Update, Chat
+from telegram import ChatAction, Update, Chat, Message
 from telegram.ext import CallbackContext, CommandHandler, ConversationHandler, Filters, MessageHandler
 from app.models.telegram_code import TelegramCode
 from app.crud.telegram_code import crud_create_telegram_code
@@ -10,9 +10,12 @@ import base64
 
 CODE_INPUT = 0
 
+last_message: Message = None
+
 
 def code_handler(update: Update, context: CallbackContext):
-    update.message.reply_text(
+    global last_message
+    last_message = update.message.reply_text(
         'Envíame tu código y te devolveré una imagen con la sintaxis resaltada.'
     )
 
@@ -20,6 +23,10 @@ def code_handler(update: Update, context: CallbackContext):
 
 
 def code_input_text(update: Update, context: CallbackContext):
+    if last_message != None:
+        context.bot.deleteMessage(
+            last_message.chat_id, last_message.message_id)
+
     update.message.chat.send_action(action=ChatAction.TYPING, timeout=None)
 
     code = text = update.message.text
